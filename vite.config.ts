@@ -7,6 +7,7 @@ import VueJsx from "@vitejs/plugin-vue-jsx";
 import Components from "unplugin-vue-components/vite";
 import Pages from "vite-plugin-pages";
 import Layouts from "vite-plugin-vue-layouts";
+import I18n from "@intlify/vite-plugin-vue-i18n";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -23,7 +24,12 @@ export default defineConfig({
       resolvers: [ArcoResolver()],
     }),
     Layouts(),
+    I18n({
+      fullInstall: false,
+      compositionOnly: true,
+    }),
   ],
+
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
