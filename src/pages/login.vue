@@ -22,7 +22,6 @@ submit-button: 登录
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
 import { reactive } from "vue";
-import { useLanguageDetect } from "@/composables/useLanguageDetect";
 import DropdownSelectLanguage from "@/components/DropdownSelectLanguage.vue";
 import { UserIcon, KeyIcon } from "@heroicons/vue/solid";
 
@@ -32,8 +31,6 @@ const model = reactive({
 });
 
 const { t } = useI18n();
-
-useLanguageDetect();
 </script>
 
 <template>
