@@ -21,49 +21,26 @@ submit-button: 登录
 
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
-import { computed, reactive } from "vue";
-import { ChevronDownIcon } from "@heroicons/vue/solid";
+import { reactive } from "vue";
+import { useLanguageDetect } from "@/composables/useLanguageDetect";
+import DropdownSelectLanguage from "@/components/DropdownSelectLanguage.vue";
+import { UserIcon, KeyIcon } from "@heroicons/vue/solid";
 
 const model = reactive({
   username: "",
   password: "",
 });
 
-const { t, locale, availableLocales } = useI18n();
+const { t } = useI18n();
 
-const localeTextMap: Record<string, string> = {
-  en: "English",
-  zh: "简体中文",
-};
-
-const selectedLocales = computed(() =>
-  availableLocales.filter((item) => item !== locale.value)
-);
-
-function handleLanguageSelect(lang: string) {
-  locale.value = lang;
-}
+useLanguageDetect();
 </script>
 
 <template>
   <div class="flex flex-col items-center justify-center h-screen bg-gray-50">
     <div class="w-[430px]">
-      <div class="flex items-center justify-end _dropdown">
-        <a-dropdown @select="handleLanguageSelect">
-          <a-button type="text">
-            {{ localeTextMap[locale] || locale }}
-            <ChevronDownIcon class="w-4 _dropdown-icon"></ChevronDownIcon>
-          </a-button>
-          <template #content>
-            <a-doption
-              v-for="item in selectedLocales"
-              :key="item"
-              :value="item"
-            >
-              {{ localeTextMap[item] || item }}
-            </a-doption>
-          </template>
-        </a-dropdown>
+      <div class="flex items-center justify-end">
+        <DropdownSelectLanguage></DropdownSelectLanguage>
       </div>
       <div class="px-8 pt-12 pb-6 mt-2 bg-white rounded-lg shadow-lg">
         <div class="grid grid-cols-[2.5rem_1fr] gap-5 items-center">
@@ -80,13 +57,18 @@ function handleLanguageSelect(lang: string) {
 
         <a-form :model="model" size="large" class="mt-8 _form" auto-label-width>
           <a-form-item>
-            <a-input :placeholder="t('username-placeholder')"></a-input>
+            <a-input :placeholder="t('username-placeholder')">
+              <template #prefix>
+                <UserIcon class="w-[1em]"></UserIcon>
+              </template>
+            </a-input>
           </a-form-item>
           <a-form-item>
-            <a-input
-              type="password"
-              :placeholder="t('password-placeholder')"
-            ></a-input>
+            <a-input-password :placeholder="t('password-placeholder')">
+              <template #prefix>
+                <KeyIcon class="w-[1em]"></KeyIcon>
+              </template>
+            </a-input-password>
           </a-form-item>
           <a-form-item>
             <a-button type="primary" long>
@@ -103,8 +85,5 @@ function handleLanguageSelect(lang: string) {
 ._form :deep(.arco-form-item-label-col) {
   /* remove form label padding */
   @apply pr-0;
-}
-._dropdown :deep(.arco-dropdown-open ._dropdown-icon) {
-  @apply rotate-180;
 }
 </style>
