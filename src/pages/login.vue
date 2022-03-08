@@ -21,14 +21,37 @@ submit-button: 登录
 
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
-import { reactive } from "vue";
 import DropdownSelectLanguage from "@/components/DropdownSelectLanguage.vue";
 import { UserIcon, KeyIcon } from "@heroicons/vue/solid";
+import { useForm, FieldError, AlertError } from "@/composables/useForm";
 
-const model = reactive({
-  username: "",
-  password: "",
-});
+const form = useForm(
+  {
+    username: "",
+    password: "",
+  },
+  // mock
+  async (val) => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (val.username !== "admin") {
+          reject(
+            new FieldError([
+              {
+                field: "username",
+                message: "user not found",
+              },
+            ])
+          );
+        } else if (val.password !== "admin") {
+          reject(new AlertError("Invalid password"));
+        } else {
+          resolve();
+        }
+      }, 1000);
+    });
+  }
+);
 
 const { t } = useI18n();
 </script>
@@ -52,23 +75,29 @@ const { t } = useI18n();
           </div>
         </div>
 
-        <a-form :model="model" size="large" class="mt-8 _form" auto-label-width>
-          <a-form-item>
-            <a-input :placeholder="t('username-placeholder')">
+        <a-form v-bind="form" size="large" class="mt-8 _form" auto-label-width>
+          <a-form-item field="username">
+            <a-input
+              v-model="form.model.username"
+              :placeholder="t('username-placeholder')"
+            >
               <template #prefix>
                 <UserIcon class="w-[1em]"></UserIcon>
               </template>
             </a-input>
           </a-form-item>
-          <a-form-item>
-            <a-input-password :placeholder="t('password-placeholder')">
+          <a-form-item field="password">
+            <a-input-password
+              v-model="form.model.password"
+              :placeholder="t('password-placeholder')"
+            >
               <template #prefix>
                 <KeyIcon class="w-[1em]"></KeyIcon>
               </template>
             </a-input-password>
           </a-form-item>
           <a-form-item>
-            <a-button type="primary" long>
+            <a-button type="primary" html-type="submit" long>
               {{ t("submit-button") }}
             </a-button>
           </a-form-item>

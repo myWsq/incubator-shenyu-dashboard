@@ -21,7 +21,11 @@ export default defineConfig({
     Components({
       dirs: [],
       dts: false,
-      resolvers: [ArcoResolver()],
+      resolvers: [
+        ArcoResolver({
+          importStyle: false,
+        }),
+      ],
     }),
     Layouts(),
     I18n({
