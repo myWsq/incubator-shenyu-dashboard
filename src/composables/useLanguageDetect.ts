@@ -12,7 +12,7 @@ for (const iterator of navigator.languages) {
 }
 
 export function useLanguageDetect() {
-  const { locale } = useI18n();
+  const { locale } = useI18n({ useScope: "global" });
 
   // is oldLocale available
   const oldLocale = localStorage.getItem(LANGUAGE_STORAGE_KEY);
